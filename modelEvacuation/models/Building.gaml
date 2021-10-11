@@ -10,4 +10,8 @@ model TsunamiAtTheCroisette
 
 /* Insert your model definition here */
 
-import "MAIN.gaml"
+species Building{
+	aspect default{
+		draw shape color:#orange;
+	}
+}

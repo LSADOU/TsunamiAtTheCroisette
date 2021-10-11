@@ -10,4 +10,8 @@ model TsunamiAtTheCroisette
 
 /* Insert your model definition here */
 
-import "MAIN.gaml"
+species Road{
+	aspect default{
+		draw shape color:#black;
+	}
+}
