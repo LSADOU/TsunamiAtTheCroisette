@@ -10,7 +10,7 @@ model TsunamiAtTheCroisette
 
 global {
 	init{
-		
+		float xfghj <- 1;
 	}
 }
 
