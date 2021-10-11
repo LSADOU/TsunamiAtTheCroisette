@@ -9,7 +9,9 @@
 model TsunamiAtTheCroisette
 
 global {
-	
+	init{
+		
+	}
 }
 
 
