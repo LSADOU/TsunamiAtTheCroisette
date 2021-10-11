@@ -27,7 +27,8 @@ species Individual skills: [moving] {
 	}
 
 	reflex randomDestination when: dest = nil {
-		do pickRandomDestination;
+		dest <- any_location_in(one_of(Road));
+		//do pickRandomDestination;
 	}
 
 	action pickRandomDestination {

@@ -11,10 +11,10 @@ import "Building.gaml"
 import "Individual.gaml"
 
 global {
-//Shapefile of the buildings
-//file building_shapefile <- file("../includes/Cannes_OSM_buildings.shp");
-//Shapefile of the roads
-	file road_shapefile <- file("../includes/Cannes_OSM_roads.shp");
+	//Shapefile of the buildings
+	//file building_shapefile <- file("../includes/Cannes_OSM_buildings.shp");
+	//Shapefile of the roads
+	file road_shapefile <- file("../includes/Road_Cannes_GAMA.shp");
 	//Shape of the environment
 	geometry shape <- envelope(road_shapefile);
 	//Step value
@@ -26,12 +26,15 @@ global {
 	//Initialization of the building using the shapefile of buildings
 	//create Building from: building_shapefile;
 	//Initialization of the road using the shapefile of roads
-		create Road from: road_shapefile;
+		write "start cleaning roads";
+		create Road from: clean_network(road_shapefile.contents, 30.0, true, true);
 		road_network <- as_edge_graph(Road);
+		write "end cleaning roads";
 		create Individual number: 1000 {
 			speed <- 10 #km / #h;
 			location <- any_location_in(one_of(Road));
-			do pickRandomDestination;
+			dest <- any_location_in(one_of(Road));
+			//do pickRandomDestination;
 		}
 
 	}
