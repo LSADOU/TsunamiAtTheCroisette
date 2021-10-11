@@ -4,13 +4,10 @@
 * Author: lsadou
 * Tags: 
 */
-
-
 model TsunamiAtTheCroisette
 
 import "MAIN.gaml"
-
-species Individual skills:[moving]{
+species Individual skills: [moving] {
 	int age;
 	bool is_safe;
 	bool is_evacuating;
@@ -19,23 +16,33 @@ species Individual skills:[moving]{
 	bool has_knowledge_about_evacuation;
 	bool has_cellphone;
 	Building home;
-	point destination;
-	
-	reflex stop when: (self distance_to destination) < 1 {
-		destination <- nil;	
+	point dest;
+
+	reflex stop when: dest != nil and (self distance_to dest) < 1 {
+		dest <- nil;
 	}
-	
-	reflex moving when:destination!=nil{
-		do goto target:destination;
-		write sample(destination);
+
+	reflex moving when: dest != nil {
+		do goto target: dest on: road_network;
 	}
-	
-	reflex randomDestination when:destination=nil{
-		destination <- any_location_in(one_of(Road));
+
+	reflex randomDestination when: dest = nil {
+		do pickRandomDestination;
 	}
-	
-	 
-	aspect default{
-		draw circle(20) color:#purple;
+
+	action pickRandomDestination {
+		point d <- any_location_in(one_of(Road));
+		list<path> all_shortest_path <- paths_between(road_network, self.location::d, 1);
+		if empty(all_shortest_path) {
+			location <- d;
+		} else {
+			dest <- d;
+		}
+
 	}
+
+	aspect default {
+		draw circle(20) color: #purple;
+	}
+
 }
