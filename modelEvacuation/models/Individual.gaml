@@ -6,7 +6,8 @@
 */
 
 
-model Individual
+model TsunamiAtTheCroisette
 
 /* Insert your model definition here */
 
+import "MAIN.gaml"

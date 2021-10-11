@@ -10,3 +10,4 @@ model AlertChainMember
 
 /* Insert your model definition here */
 
+import "MAIN.gaml"
