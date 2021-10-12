@@ -7,6 +7,7 @@
 model TsunamiAtTheCroisette
 
 import "MAIN.gaml"
+
 species Individual skills: [moving] {
 	int age;
 	bool is_safe;
