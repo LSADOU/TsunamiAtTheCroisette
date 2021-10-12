@@ -18,6 +18,8 @@ global{
 	rgb text_color <- #white;
 	rgb background <- world.color.darker.darker;
 	
+	//Shapefile of the siren location
+	file siren_shapefile <- file("../includes/Sirene_Cannes_GAMA.shp");
 	//Shapefile of the buildings
 	file building_shapefile <- file("../includes/Buildings_Cannes_GAMA.shp");
 	//Shapefile of the roads
@@ -26,6 +28,6 @@ global{
 	
 	float radius_siren_buffer <- 1.5#km;
 	
-	map<string, int> alert_chain_delay_member <- ["x"::4,"y"::5,"z"::6];
+	map<string, float> alert_chain_delay_member <- ["CENALT"::8#mn,"COGIC"::10#mn,"Préfecture"::10#mn,"Commune"::10#mn];
 }
 

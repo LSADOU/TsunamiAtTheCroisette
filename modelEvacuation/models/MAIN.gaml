@@ -31,9 +31,7 @@ global {
 			location <- any_location_in(one_of(Road));
 			dest <- any_location_in(one_of(Road));
 		}
-		create Siren number:4{
-			location <- any_location_in(one_of(Road));
-		}
+		create Siren from: siren_shapefile;
 		point start <- point(500,-500);
 		loop alert_chain_member_name over:alert_chain_delay_member.keys{
 			create AlertChainMember{
@@ -63,7 +61,7 @@ global {
 	}
 }
 
-experiment xp type: gui {
+experiment START_TSUNAMI type: gui {
 	output {
 		layout #split toolbars: false consoles: true navigator:false parameters: false;
 		
@@ -74,6 +72,7 @@ experiment xp type: gui {
 			species AlertChainMember aspect:default;
 			species Siren aspect: default;
 			
+			image file("../includes/satellite.png");
 		
 			overlay position: {5, 4} size: {200 #px, 140 #px} rounded: true transparency:0.2{
 				draw (""+current_date.day+"/"+current_date.month+"/"+current_date.year) font: default at: {15 #px, 10 #px} anchor: #top_left color: text_color;

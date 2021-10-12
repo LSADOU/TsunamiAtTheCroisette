@@ -16,7 +16,6 @@ import "parameters.gaml"
 import "AlertVector.gaml"
 
 species Siren parent: AlertVector{
-	file img <- image_file("../includes/siren.png");
 	
 	action alert{
 		ask Individual where (each.location distance_to self < radius_siren_buffer){
