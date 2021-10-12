@@ -30,6 +30,10 @@ species Individual skills: [moving] {
 		dest <- any_location_in(one_of(Road));
 		//do pickRandomDestination;
 	}
+	
+	action getAlert{
+		is_alerted <- true;
+	}
 
 	action pickRandomDestination {
 		point d <- any_location_in(one_of(Road));
@@ -43,7 +47,10 @@ species Individual skills: [moving] {
 	}
 
 	aspect default {
-		draw circle(20) color: #purple;
+		rgb c <- #cyan;
+		c <- is_alerted ? #red : c;
+		c <- is_evacuating ? #purple : c;
+		draw circle(20) color: c;
 	}
 
 }
