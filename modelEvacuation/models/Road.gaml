@@ -12,6 +12,6 @@ model TsunamiAtTheCroisette
 
 species Road{
 	aspect default{
-		draw shape color:#black;
+		draw shape color:#black width:5;
 	}
 }

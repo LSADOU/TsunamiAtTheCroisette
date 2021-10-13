@@ -19,21 +19,43 @@ global {
 	
 	geometry area_to_evacuate;
 	
+	//this maps store the Building according to their centroid (useful when importing individual)
+	map<point,Building> building_from_centroids;
+	
+	list<Building> beaches;
 
 	init {
+		area_to_evacuate <- first(to_evacuate_shapefile);
 		//Initialization of the building using the shapefile of buildings
-		create Building from: building_shapefile;
-		//Initialization of the road using the shapefile of roads
-		write "start cleaning roads";
-		create Road from: clean_network(road_shapefile.contents, 30.0, true, true);
-		road_network <- as_edge_graph(Road);
-		write "end cleaning roads";
-		create Individual number: 8000 {
-			speed <- 10 #km / #h;
-			location <- any_location_in(one_of(Road));
-			dest <- any_location_in(one_of(Road));
+		create Building from: building_shapefile{
+			if not(self overlaps area_to_evacuate){
+				do die;
+			}else{
+				if string(get("name")) contains "plage"{
+					beaches<<self;
+				}
+			}
 		}
+		write beaches;
+		
+		//Initialization of the road using the shapefile of roads
+		create Road from:road_shapefile{
+			if not(shape overlaps area_to_evacuate){
+				do die;
+			}
+		}
+		road_network <- as_edge_graph(Road);
+		create Individual number:1000{
+			speed <- 10 #km / #h;
+			if (flip(proportion_people_at_beach)){
+				location <- any_location_in(one_of(beaches));
+			}else{
+				location <- any_location_in(one_of(Building));
+			}
+		}
+		
 		create Siren from: siren_shapefile;
+		
 		area_to_evacuate <- first(to_evacuate_shapefile);
 		
 		point start <- point(500,-500);
@@ -75,6 +97,9 @@ experiment START_TSUNAMI type: gui {
 			species Road aspect: default;
 			species Building aspect: default;
 			species Siren aspect: default;
+			graphics "evacuation area limit"{
+				draw area_to_evacuate empty:true color:#red border:#red width:10;
+			}
 			species Individual aspect: default;
 			species AlertChainMember aspect:default;
 			

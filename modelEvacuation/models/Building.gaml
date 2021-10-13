@@ -12,6 +12,6 @@ model TsunamiAtTheCroisette
 
 species Building{
 	aspect default{
-		draw shape wireframe:true border:#black;
+		draw shape color:color border:#black;
 	}
 }

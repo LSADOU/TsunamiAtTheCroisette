@@ -23,10 +23,16 @@ global{
 	//Shapefile of the buildings
 	file building_shapefile <- file("../includes/Batiments/Buildings_Cannes_GAMA.shp");
 	//Shapefile of the roads
-	file road_shapefile <- file("../includes/Roads/Road_Cannes_GAMA.shp");
+	file road_shapefile <- file("../includes/new_road_locations.shp");
 	//Shapefile of the roads
 	file to_evacuate_shapefile <- file("../includes/Zone_evacuation/evacuation_area_GAMA.shp");
+	//Shapefile of the individuals
+	file individual_shapefile <- file("../includes/new_indiv_locations.shp");
 	geometry shape <- envelope(road_shapefile);
+	
+	list<int> id_beaches <- [35000,35001,35002];
+	
+	float proportion_people_at_beach <- 0.6;
 	
 	float radius_siren_buffer <- 1.5#km;
 	
