@@ -89,6 +89,7 @@ experiment START_TSUNAMI type: gui {
 			species Siren aspect: default;
 			species Individual aspect: default;
 			species AlertChainMember aspect: default;
+			//list safe_spots aspect: default;
 			overlay position: {5, 4} size: {200 #px, 140 #px} rounded: true transparency: 0.2 {
 				draw ("" + current_date.day + "/" + current_date.month + "/" + current_date.year) font: default at: {15 #px, 10 #px} anchor: #top_left color: text_color;
 				string dispclock <- current_date.hour < 10 ? "0" + current_date.hour : "" + current_date.hour;
