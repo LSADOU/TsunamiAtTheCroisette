@@ -18,7 +18,7 @@ species Individual skills: [moving] {
 	Building home;
 	point dest;
 	point evacuation_point;
-	string behaviour <- "panicked" among: ["amused", "panicked", "has_knowledge"];
+	string behaviour <- "panicked" among: ["amused", "panicked", "evacuating", ""];
 
 	reflex stop when: dest != nil and (self distance_to dest) < 1 {
 		dest <- nil;
@@ -40,9 +40,13 @@ species Individual skills: [moving] {
 	action getInformation {
 	// Trigger the boolean which enable an agent to leave 
 		has_knowledge_about_evacuation <- true;
+		evacuation_point <- closest_to(safe_spots, self);
 	}
 
-	reflex reactAlert when: is_alerted {
+	reflex evacuate when: is_alerted and not has_knowledge_about_evacuation {
+	}
+
+	reflex reactAlert when: is_alerted and not has_knowledge_about_evacuation {
 		switch behaviour {
 			match "has_knowledge" {
 			//comportement si has knowledge, agent will try to warn other agent and go outside hazard area
@@ -67,7 +71,7 @@ species Individual skills: [moving] {
 
 			}
 
-			match "panicked" {
+			match "rushing" {
 				ask Individual { //do nothing
 				}
 
