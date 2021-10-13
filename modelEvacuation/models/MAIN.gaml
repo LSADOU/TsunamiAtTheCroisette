@@ -19,46 +19,52 @@ global {
 	graph road_network;
 	geometry area_to_evacuate;
 	list<Building> beaches;
+	list<point> safe_spots;
 
 	init {
 		area_to_evacuate <- first(to_evacuate_shapefile);
 		//Initialization of the building using the shapefile of buildings
-		create Building from: building_shapefile{
-			if not(self overlaps area_to_evacuate){
+		create Building from: building_shapefile {
+			if not (self overlaps area_to_evacuate) {
 				do die;
-			}else{
-				if string(get("name")) contains "plage"{
-					beaches<<self;
+			} else {
+				if string(get("name")) contains "plage" {
+					beaches << self;
 				}
+
 			}
+
 		}
+
 		write beaches;
 		geometry safe_area;
-		list<point> safe_spots;
+
 		//Initialization of the road using the shapefile of roads
-		create Road from:road_shapefile{
-			if not(shape overlaps area_to_evacuate){
+		create Road from: road_shapefile {
+			if not (shape overlaps area_to_evacuate) {
 				do die;
 			}
+
 		}
+
 		road_network <- as_edge_graph(Road);
-		create Individual number:1000{
-		write "end cleaning roads";
 		create Individual number: 1000 {
 			speed <- 10 #km / #h;
-			if (flip(proportion_people_at_beach)){
+			if (flip(proportion_people_at_beach)) {
 				location <- any_location_in(one_of(beaches));
-			}else{
+			} else {
 				location <- any_location_in(one_of(Building));
 			}
+
 		}
-		
+
 		create Siren from: siren_shapefile;
 		create Siren from: siren_shapefile;
 		safe_area <- first(safe_area_shapefile);
 		loop times: 10 {
 			safe_spots << any_location_in(safe_area);
 		}
+
 		area_to_evacuate <- first(to_evacuate_shapefile);
 		point start <- point(500, -500);
 		loop alert_chain_member_name over: alert_chain_delay_member.keys {
@@ -105,9 +111,10 @@ experiment START_TSUNAMI type: gui {
 			species Road aspect: default;
 			species Building aspect: default;
 			species Siren aspect: default;
-			graphics "evacuation area limit"{
-				draw area_to_evacuate empty:true color:#red border:#red width:10;
+			graphics "evacuation area limit" {
+				draw area_to_evacuate empty: true color: #red border: #red width: 10;
 			}
+
 			species Individual aspect: default;
 			species AlertChainMember aspect: default;
 			//list safe_spots aspect: default;
