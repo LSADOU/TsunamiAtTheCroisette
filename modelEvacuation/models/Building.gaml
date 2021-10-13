@@ -4,14 +4,13 @@
 * Author: lsadou
 * Tags: 
 */
-
-
 model TsunamiAtTheCroisette
 
 /* Insert your model definition here */
+species Building {
 
-species Building{
-	aspect default{
-		draw shape wireframe:true border:#black;
+	aspect default {
+		draw shape empty: true border: #black;
 	}
+
 }
