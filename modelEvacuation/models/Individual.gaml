@@ -18,7 +18,7 @@ species Individual skills: [moving] {
 	Building home;
 	point dest;
 	point evacuation_point;
-	string behaviour <- "alerted" among: ["amused", "panicked", "has_knowledge"];
+	string behaviour <- "panicked" among: ["amused", "panicked", "has_knowledge"];
 
 	reflex stop when: dest != nil and (self distance_to dest) < 1 {
 		dest <- nil;
@@ -46,12 +46,12 @@ species Individual skills: [moving] {
 		switch behaviour {
 			match "has_knowledge" {
 			//comportement si has knowledge, agent will try to warn other agent and go outside hazard area
-				ask Individual where (distance_to(self.location, each.location) < 5 #m) {
+				ask Individual where (distance_to(self.location, each.location) < 7 #m) {
 					behaviour <- "has_knowledge";
 					is_alerted <- true;
 				}
 
-				ask Individual where (distance_to(self.location, each.location) < 10 #m) {
+				ask Individual where (distance_to(self.location, each.location) < 20 #m) {
 					is_alerted <- true;
 				}
 
@@ -59,6 +59,8 @@ species Individual skills: [moving] {
 
 			match "amused" {
 				ask Individual {
+				// describe how the agent will behave when in the amused state
+				// the agent will do absolutely nothing but wander around at a stated speed
 					speed <- 1 #m / #s;
 					do wander;
 				}
@@ -66,8 +68,7 @@ species Individual skills: [moving] {
 			}
 
 			match "panicked" {
-				ask Individual {
-					speed <- 1 #m / #s;
+				ask Individual { //do nothing
 				}
 
 			}
@@ -87,11 +88,11 @@ species Individual skills: [moving] {
 
 	}
 
-	reflex goOutsideEvacuationArea when: self. = true and self.has_knowledge_about_evacuation = true {
-	//ToDo : Put a go to to evacuation shapefile name
-	//list<Road> road_outside_evacuation <- 
-	//do goto one_of();
-
+	reflex goOutsideEvacuationArea when: has_knowledge_about_evacuation {
+	// Reflex which allows an agent to move to a safe spot located in the safe area.
+	// The agent needs to have information / be aware of those safe areas.
+	// The agent will use roads
+		do goto target: one_of(safe_spots) on: road_network;
 	}
 
 	aspect default {
