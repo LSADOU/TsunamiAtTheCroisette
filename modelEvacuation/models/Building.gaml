@@ -4,14 +4,12 @@
 * Author: lsadou
 * Tags: 
 */
-
-
 model TsunamiAtTheCroisette
 
 /* Insert your model definition here */
-
 species Building{
 	aspect default{
 		draw shape color:color border:#black;
 	}
+
 }
