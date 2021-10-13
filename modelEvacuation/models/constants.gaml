@@ -17,6 +17,5 @@ global{
 	string act_leisure <- "leisure";
 	list<string> activity_list <- [act_studying,act_working,act_home,act_eating,act_leisure];
 	
-	
 }
 	

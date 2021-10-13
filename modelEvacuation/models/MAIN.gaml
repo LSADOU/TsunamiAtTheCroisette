@@ -17,6 +17,8 @@ global {
 	//Graph of the road network
 	graph road_network;
 	
+	geometry area_to_evacuate;
+	
 
 	init {
 		//Initialization of the building using the shapefile of buildings
@@ -26,12 +28,14 @@ global {
 		create Road from: clean_network(road_shapefile.contents, 30.0, true, true);
 		road_network <- as_edge_graph(Road);
 		write "end cleaning roads";
-		create Individual number: 1000 {
+		create Individual number: 8000 {
 			speed <- 10 #km / #h;
 			location <- any_location_in(one_of(Road));
 			dest <- any_location_in(one_of(Road));
 		}
 		create Siren from: siren_shapefile;
+		area_to_evacuate <- first(to_evacuate_shapefile);
+		
 		point start <- point(500,-500);
 		loop alert_chain_member_name over:alert_chain_delay_member.keys{
 			create AlertChainMember{
@@ -65,14 +69,15 @@ experiment START_TSUNAMI type: gui {
 	output {
 		layout #split toolbars: false consoles: true navigator:false parameters: false;
 		
-		display map type: opengl draw_env:false synchronized: true{
-			species Road aspect: default;
-			species Building aspect: default;
-			species Individual aspect: default;
-			species AlertChainMember aspect:default;
-			species Siren aspect: default;
+		display map type: opengl draw_env:false{
 			
 			image file("../includes/satellite.png");
+			species Road aspect: default;
+			species Building aspect: default;
+			species Siren aspect: default;
+			species Individual aspect: default;
+			species AlertChainMember aspect:default;
+			
 		
 			overlay position: {5, 4} size: {200 #px, 140 #px} rounded: true transparency:0.2{
 				draw (""+current_date.day+"/"+current_date.month+"/"+current_date.year) font: default at: {15 #px, 10 #px} anchor: #top_left color: text_color;

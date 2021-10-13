@@ -19,11 +19,13 @@ global{
 	rgb background <- world.color.darker.darker;
 	
 	//Shapefile of the siren location
-	file siren_shapefile <- file("../includes/Sirene_Cannes_GAMA.shp");
+	file siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
 	//Shapefile of the buildings
-	file building_shapefile <- file("../includes/Buildings_Cannes_GAMA.shp");
+	file building_shapefile <- file("../includes/Batiments/Buildings_Cannes_GAMA.shp");
 	//Shapefile of the roads
-	file road_shapefile <- file("../includes/Road_Cannes_GAMA.shp");
+	file road_shapefile <- file("../includes/Roads/Road_Cannes_GAMA.shp");
+	//Shapefile of the roads
+	file to_evacuate_shapefile <- file("../includes/Zone_evacuation/evacuation_area_GAMA.shp");
 	geometry shape <- envelope(road_shapefile);
 	
 	float radius_siren_buffer <- 1.5#km;
