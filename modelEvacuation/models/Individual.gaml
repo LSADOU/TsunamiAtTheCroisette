@@ -51,7 +51,7 @@ species Individual skills: [moving] {
 		rgb c <- #cyan;
 		c <- is_alerted ? #red : c;
 		c <- is_evacuating ? #purple : c;
-		draw circle(20) color: c;
+		draw circle(10) color: c;
 	}
 
 }
