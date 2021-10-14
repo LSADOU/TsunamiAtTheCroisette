@@ -67,7 +67,7 @@ species Individual skills: [moving] {
 					}
 				}else{
 					if flip(0.01){
-						dest <- closest_to(seas,self);
+						dest <- any_location_in(closest_to(seas,self));
 					}
 				}
 			}
@@ -81,7 +81,7 @@ species Individual skills: [moving] {
 					}
 				}else{
 					if flip(0.01){
-						dest <- closest_to(beaches,self);
+						dest <- any_location_in(closest_to(beaches,self));
 					}else{
 						dest <- any_location_in(closest_to(seas,self));
 					}

@@ -29,6 +29,8 @@ global {
 	
 	float radius_siren_buffer <- 1.5#km;
 	
+	float delay_get_info <- 3#mn;
+	
 	map<string, float> alert_chain_delay_member <- ["CENALT"::8#mn,"COGIC"::10#mn,/*"Préfecture"::10#mn,*/"Commune"::10#mn];
 	map<string,int> init_activity_distrib <- ["driving"::500,"doing thing"::500,"walking"::500,"sunbathing"::1500,"swimming"::250];
 	map<string,float> behaviour_distrib <- ["local"::0.4,"amused"::0.1, "tourist"::0.4, "altruist"::0.1];
