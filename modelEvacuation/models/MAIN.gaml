@@ -33,20 +33,22 @@ global {
 			safe_spots << any_location_in(safe_area);
 		}
 		//Initialization of the building using the shapefile of buildings
+		write "Creating building...";
 		create Building from: building_shapefile {
 			if not ((self overlaps area_to_evacuate) or (self overlaps safe_area)) {
 				do die;
 			} else {
-				if string(get("name")) contains "plage" {
+				if string(get("type")) contains "plage" {
 					beaches << self;
-				}else if string(get("name")) contains "mer"{
+				}else if string(get("name")) = "mer"{
 					write string(get("name"));
 					seas << self;
 				}
 			}
 		}
-		
+		write ""+length(beaches)+" beaches and "+ length(seas)+" swimming areas imported";
 		//Initialization of the road using the shapefile of roads
+		write "Creating roads...";
 		create Road from: road_shapefile {
 			if not ((shape overlaps area_to_evacuate) or (self overlaps safe_area)) {
 				do die;
@@ -55,6 +57,7 @@ global {
 		road_network <- as_edge_graph(Road);
 		
 		//Initialization of the individuals using initial activities distribution
+		write "Creating individuals...";
 		loop act over: init_activity_distrib.keys{
 			create Individual number: init_activity_distrib[act] {
 				activity <- act;
@@ -75,7 +78,7 @@ global {
 			}
 		}
 		
-		
+		write "Creating alert chain members...";
 		point start <- point(500, -500);
 		loop alert_chain_member_name over: alert_chain_delay_member.keys {
 			create AlertChainMember {

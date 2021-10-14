@@ -10,10 +10,8 @@ import "MAIN.gaml"
 
 species Individual skills: [moving] {
 	int age;
-	bool is_safe;
 	bool is_evacuating;
 	bool is_alerted;
-	bool has_knowledge_about_evacuation;
 	bool has_cellphone;
 	point dest;
 	point evacuation_point;
@@ -28,7 +26,7 @@ species Individual skills: [moving] {
 	}
 
 	action getInformation { 
-		has_knowledge_about_evacuation <- true;
+		is_evacuating <- true;
 		evacuation_point <- closest_to(safe_spots, self);
 	}
 	
@@ -62,14 +60,14 @@ species Individual skills: [moving] {
 			match "sunbathing"{
 				if dest!=nil{
 					if distance_to(dest,self)<2{
-						activity <- "swimming";
 						dest <- nil;
+						activity <- "swimming";
 					}else{
 						do goto target:dest speed:1#m/#s;
 					}
 				}else{
-					if flip(0.1){
-						dest <- any_location_in(closest_to(seas,self));
+					if flip(0.01){
+						dest <- closest_to(seas,self);
 					}
 				}
 			}
@@ -82,17 +80,17 @@ species Individual skills: [moving] {
 						do goto target:dest;
 					}
 				}else{
-					if flip(0.1){
-						dest <- any_location_in(closest_to(beaches,self));
+					if flip(0.01){
+						dest <- closest_to(beaches,self);
 					}else{
-						do wander amplitude:5#m speed:1#m/#s;
+						dest <- any_location_in(closest_to(seas,self));
 					}
 				}
 			}
 		}
 	}
 	
-	reflex panic when: is_alerted and not has_knowledge_about_evacuation{
+	reflex panic when: is_alerted and not is_evacuating{
 		switch behaviour{
 			match "local"{
 				
@@ -109,7 +107,7 @@ species Individual skills: [moving] {
 		}
 	}
 	
-	reflex evacuate when: is_alerted and has_knowledge_about_evacuation {
+	reflex evacuate when: is_alerted and is_evacuating {
 		if dest!=nil{
 			if distance_to(dest,self)<2{
 				dest <- nil;
@@ -123,7 +121,6 @@ species Individual skills: [moving] {
 			}else{
 				do goto target:evacuation_point on:road_network speed:3#m/#s;
 			}
-			
 		}
 		
 		if behaviour = "altruist"{
@@ -145,10 +142,9 @@ species Individual skills: [moving] {
 			match "sunbathing"{c <- #yellow;}
 			match "swimming"{c <- #blue;}
 		}
-		rgb c2;
-		c2 <- is_alerted ? #red : c;
-		c2 <- is_alerted and has_knowledge_about_evacuation? #magenta : c;
-		draw circle(10) color: c border: c2;
+		c <- is_alerted ? #red : c;
+		c <- is_alerted and is_evacuating? #magenta : c;
+		draw circle(10) color: c;
 	}
 
 }
