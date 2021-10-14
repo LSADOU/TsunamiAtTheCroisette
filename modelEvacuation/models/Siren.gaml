@@ -25,7 +25,7 @@ species Siren parent: AlertVector{
 	
 	aspect default{
 		draw circle(radius_siren_buffer) empty:true border:#green width:10;
-		draw square(100) color:#green;
+		//draw square(100) color:#green;
 	}
 }
 

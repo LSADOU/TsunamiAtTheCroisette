@@ -18,54 +18,64 @@ global {
 //Graph of the road network
 	graph road_network;
 	geometry area_to_evacuate;
+	geometry safe_area;
 	list<Building> beaches;
+	list<Building> seas;
 	list<point> safe_spots;
+	int safe_people;
 
 	init {
+		safe_people <- 0;
+		create Siren from: siren_shapefile;
 		area_to_evacuate <- first(to_evacuate_shapefile);
-		//Initialization of the building using the shapefile of buildings
-		create Building from: building_shapefile {
-			if not (self overlaps area_to_evacuate) {
-				do die;
-			} else {
-				if string(get("name")) contains "plage" {
-					beaches << self;
-				}
-
-			}
-
-		}
-
-		write beaches;
-		geometry safe_area;
-
-		//Initialization of the road using the shapefile of roads
-		create Road from: road_shapefile {
-			if not (shape overlaps area_to_evacuate) {
-				do die;
-			}
-
-		}
-
-		road_network <- as_edge_graph(Road);
-		create Individual number: 1000 {
-			speed <- 10 #km / #h;
-			if (flip(proportion_people_at_beach)) {
-				location <- any_location_in(one_of(beaches));
-			} else {
-				location <- any_location_in(one_of(Building));
-			}
-
-		}
-
-		create Siren from: siren_shapefile;
-		create Siren from: siren_shapefile;
 		safe_area <- first(safe_area_shapefile);
 		loop times: 10 {
 			safe_spots << any_location_in(safe_area);
 		}
-
-		area_to_evacuate <- first(to_evacuate_shapefile);
+		//Initialization of the building using the shapefile of buildings
+		create Building from: building_shapefile {
+			if not ((self overlaps area_to_evacuate) or (self overlaps safe_area)) {
+				do die;
+			} else {
+				if string(get("name")) contains "plage" {
+					beaches << self;
+				}else if string(get("name")) contains "mer"{
+					write string(get("name"));
+					seas << self;
+				}
+			}
+		}
+		
+		//Initialization of the road using the shapefile of roads
+		create Road from: road_shapefile {
+			if not ((shape overlaps area_to_evacuate) or (self overlaps safe_area)) {
+				do die;
+			}
+		}
+		road_network <- as_edge_graph(Road);
+		
+		//Initialization of the individuals using initial activities distribution
+		loop act over: init_activity_distrib.keys{
+			create Individual number: init_activity_distrib[act] {
+				activity <- act;
+				switch activity{
+					match "driving"{location <- any_location_in(one_of(Road));}
+					match "doing thing"{location <- any_location_in(one_of(Building));}
+					match "walking"{location <- any_location_in(one_of(Road));}
+					match "sunbathing"{location <- any_location_in(one_of(beaches));}
+					match "swimming"{location <- any_location_in(one_of(seas));}
+				}
+				float pick <- rnd(1.0);
+				loop b over:behaviour_distrib.keys{
+					if behaviour_distrib[b] >= pick{
+						behaviour <- b;
+						break;
+					}
+				}
+			}
+		}
+		
+		
 		point start <- point(500, -500);
 		loop alert_chain_member_name over: alert_chain_delay_member.keys {
 			create AlertChainMember {
@@ -73,10 +83,8 @@ global {
 				name <- alert_chain_member_name;
 				delay <- alert_chain_delay_member[alert_chain_member_name];
 			}
-
 			start <- start + point(1000, 0);
 		}
-
 		AlertChainMember temp;
 		loop cm over: reverse(AlertChainMember) {
 			if (cm = last(AlertChainMember)) {
@@ -85,10 +93,8 @@ global {
 				ask cm {
 					member_to_alert <- temp;
 				}
-
 				temp <- cm;
 			}
-
 		}
 
 		ask last(AlertChainMember) {
@@ -111,8 +117,14 @@ experiment START_TSUNAMI type: gui {
 			species Road aspect: default;
 			species Building aspect: default;
 			species Siren aspect: default;
-			graphics "evacuation area limit" {
+			/*graphics "evacuation area limit" {
 				draw area_to_evacuate empty: true color: #red border: #red width: 10;
+			}*/
+			graphics "safe spots" {
+				loop sp over:safe_spots{
+					draw square(100) at: sp color: #red;
+				}
+				
 			}
 
 			species Individual aspect: default;
