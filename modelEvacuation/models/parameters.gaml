@@ -28,6 +28,12 @@ global {
 	file to_evacuate_shapefile <- file("../includes/Zone_evacuation/evacuation_area_GAMA.shp");
 	//Shapefile of the safe Area 
 	file safe_area_shapefile <- file("../includes/Safe_area/Safe_area.shp");
+	//Shapefile of the beaches
+	file beach_shapefile <- file("../includes/Plage/Plage_GAMA.shp");
+	//Shapefile of the swimming area
+	file seas_shapefile <- file("../includes/Mer/mer_GAMA.shp");
+	//Shapefile of the safes refuges
+	file safe_places_shapefile <- file("../includes/safe_refuge/Evacuation_refuge.shp");
 	geometry shape <- envelope(road_shapefile);
 	
 	float radius_siren_buffer <- 1.5#km;

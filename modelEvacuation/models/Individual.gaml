@@ -15,7 +15,6 @@ species Individual skills: [moving] {
 	bool has_cellphone;
 	point dest;
 	point evacuation_point;
-	string activity <- "sunbathing" among:["driving","doing thing","walking","sunbathing","swimming"];
 	string behaviour <- "local" among: ["local","amused", "tourist", "altruist"];
 	date received_alert;
 
@@ -30,66 +29,6 @@ species Individual skills: [moving] {
 	action getInformation { 
 		is_evacuating <- true;
 		evacuation_point <- closest_to(safe_spots, self);
-	}
-	
-	reflex activity when: not is_alerted{
-		switch activity{
-			match "driving"{
-				if dest!=nil{
-					if distance_to(dest,self)<2{
-						dest <- nil;
-					}else{
-						do goto target:dest on:road_network speed:30#km/#h;
-					}
-				}else{
-					dest <- any_location_in(safe_area+area_to_evacuate);
-				}
-			}
-			match "doing thing"{
-				//DO NOTHING ACTUALLY
-			}
-			match "walking"{
-				if dest!=nil{
-					if distance_to(dest,self)<2{
-						dest <- nil;
-					}else{
-						do goto target:dest on:road_network speed:2#m/#s;
-					}
-				}else{
-					dest <- any_location_in(safe_area+area_to_evacuate);
-				}
-			}
-			match "sunbathing"{
-				if dest!=nil{
-					if distance_to(dest,self)<2{
-						dest <- nil;
-						activity <- "swimming";
-					}else{
-						do goto target:dest speed:1#m/#s;
-					}
-				}else{
-					if flip(0.01){
-						dest <- any_location_in(closest_to(seas,self));
-					}
-				}
-			}
-			match "swimming"{
-				if dest!=nil{
-					if distance_to(dest,self)<2{
-						activity <- "sunbathing";
-						dest <- nil;
-					}else{
-						do goto target:dest;
-					}
-				}else{
-					if flip(0.01){
-						dest <- any_location_in(closest_to(beaches,self));
-					}else{
-						dest <- any_location_in(closest_to(seas,self));
-					}
-				}
-			}
-		}
 	}
 	
 	reflex panic when: is_alerted and not is_evacuating{
@@ -117,11 +56,7 @@ species Individual skills: [moving] {
 				do goto target:dest speed:3#m/#s;
 			}
 		}else{
-			if activity= "driving"{
-				do goto target:evacuation_point on:road_network speed:30#km/#h;
-			}else{
-				do goto target:evacuation_point on:road_network speed:3#m/#s;
-			}
+			
 		}
 		
 		if behaviour = "altruist"{
@@ -136,13 +71,6 @@ species Individual skills: [moving] {
 	
 	aspect default {
 		rgb c;
-		switch activity{
-			match "driving"{c <- #pink;}
-			match "doing thing"{c <- #grey;}
-			match "walking"{c <- #purple;}
-			match "sunbathing"{c <- #yellow;}
-			match "swimming"{c <- #blue;}
-		}
 		c <- is_alerted ? #red : c;
 		c <- is_alerted and is_evacuating? #magenta : c;
 		draw circle(10) color: c;
