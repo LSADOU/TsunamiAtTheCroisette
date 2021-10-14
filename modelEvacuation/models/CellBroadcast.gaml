@@ -18,6 +18,7 @@ species CellBroadcast{
 	action alert{
 		ask Individual{
 			do getAlert;
+			is_evacuating <- true;
 		}
 	}
 }
