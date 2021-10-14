@@ -17,8 +17,10 @@ species CellBroadcast{
 	
 	action alert{
 		ask Individual{
-			do getAlert;
-			is_evacuating <- true;
+			if has_cellphone{
+				do getAlert;
+				do getInformation;
+			}
 		}
 	}
 }

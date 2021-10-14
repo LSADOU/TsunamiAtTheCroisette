@@ -24,7 +24,7 @@ species AlertChainMember{
 	
 	action receiving_alert{
 		if(has_to_start_alert){
-			ask Siren{
+			ask alert_vectors{
 				do alert;
 			}
 		}else{

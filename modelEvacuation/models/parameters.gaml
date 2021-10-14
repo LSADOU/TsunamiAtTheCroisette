@@ -8,7 +8,12 @@ model parameters
 
 global {
 	float step <- 10 #s;
-	date starting_date <- date(2021, 10, 12, 0, 0, 0);
+	date starting_date <- date(2021, 10, 12, 12, 14, 50);
+	float alert_chain_delay <- 15#mn;
+	date alert_date <- date(2021, 10, 12, 12, 0, 0) + alert_chain_delay;
+	float tsunami_time <- 20#mn;
+	date tsunami_date <- date(2021, 10, 12, 12, 0, 0)+tsunami_time;
+	
 	font default <- font("Helvetica", 24, #bold);
 	rgb text_color <- #white;
 	rgb background <- world.color.darker.darker;
@@ -24,7 +29,7 @@ global {
 	//Shapefile of the safe Area 
 	file safe_area_shapefile <- file("../includes/Safe_area/Safe_area.shp");
 	geometry shape <- envelope(road_shapefile);
-	date tsunami_date <- starting_date + 20#mn;
+	
 	float radius_siren_buffer <- 1.5#km;
 	float delay_get_info <- 3#mn;
 	
