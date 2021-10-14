@@ -10,6 +10,7 @@ import "Road.gaml"
 import "Building.gaml"
 import "Individual.gaml"
 import "Siren.gaml"
+import "CellBroadcast.gaml"
 import "AlertChainMember.gaml"
 import "Safe_Area.gaml"
 
@@ -27,6 +28,7 @@ global {
 	init {
 		safe_people <- 0;
 		create Siren from: siren_shapefile;
+		create CellBroadcast;
 		area_to_evacuate <- first(to_evacuate_shapefile);
 		safe_area <- first(safe_area_shapefile);
 		loop times: 10 {
@@ -108,6 +110,16 @@ global {
 			do receiving_alert;
 		}
 
+	}
+	reflex tsunami_is_here when: current_date>tsunami_date{
+		int nb_dead_people <- 0;
+		loop i over: Individual{
+			nb_dead_people <- i overlaps area_to_evacuate?nb_dead_people+1:nb_dead_people;
+		}
+		write ""+ "****** END OF SIMULATION *******" color:#red;
+		write ""+nb_dead_people+" are dead" color:#red;
+		do pause;
+		
 	}
 
 }
