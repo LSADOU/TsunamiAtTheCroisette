@@ -17,12 +17,14 @@ species Individual skills: [moving] {
 	point evacuation_point;
 	string activity <- "sunbathing" among:["driving","doing thing","walking","sunbathing","swimming"];
 	string behaviour <- "local" among: ["local","amused", "tourist", "altruist"];
+	date received_alert;
 
 	action getAlert {
 		if not is_alerted{
 			dest <- any_location_in(closest_to(Road,self));
 		}
 		is_alerted <- true;
+		received_alert <- current_date;
 	}
 
 	action getInformation { 
@@ -93,16 +95,15 @@ species Individual skills: [moving] {
 	reflex panic when: is_alerted and not is_evacuating{
 		switch behaviour{
 			match "local"{
-				
+				if current_date < received_alert + delay_get_info {
+					is_evacuating <- true;
+				}
 			}
 			match "amused"{
-				
+				do wander amplitude:100#m speed:1#m/#s;
 			}
-			match "tourist"{
-				
-			}
-			match "full knowledge"{
-				
+			match "altuist"{
+				is_evacuating <- true;
 			}
 		}
 	}
