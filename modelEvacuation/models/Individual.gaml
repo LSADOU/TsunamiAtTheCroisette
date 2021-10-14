@@ -96,14 +96,14 @@ species Individual skills: [moving] {
 		switch behaviour{
 			match "local"{
 				if current_date < received_alert + delay_get_info {
-					is_evacuating <- true;
+					do getInformation;
 				}
 			}
 			match "amused"{
 				do wander amplitude:100#m speed:1#m/#s;
 			}
 			match "altuist"{
-				is_evacuating <- true;
+				do getInformation;
 			}
 		}
 	}
