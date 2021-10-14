@@ -7,13 +7,12 @@
 model parameters
 
 global {
-	float step <- 10 #s;
+	float step <- 1 #s;
 	date starting_date <- date(2021, 10, 12, 12, 14, 50);
 	float alert_chain_delay <- 15#mn;
 	date alert_date <- date(2021, 10, 12, 12, 0, 0) + alert_chain_delay;
 	float tsunami_time <- 20#mn;
 	date tsunami_date <- date(2021, 10, 12, 12, 0, 0)+tsunami_time;
-	
 	font default <- font("Helvetica", 24, #bold);
 	rgb text_color <- #white;
 	rgb background <- world.color.darker.darker;
@@ -21,7 +20,7 @@ global {
 	//Shapefile of the siren location
 	file siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
 	//Shapefile of the buildings
-	file building_shapefile <- file("../includes/Batiments/Buildings_Cannes_GAMAV2.shp");
+	file building_shapefile <- file("../includes/BatimentsV4/BatimentsV4.shp");
 	//Shapefile of the roads
 	file road_shapefile <- file("../includes/new_road_locations.shp");
 	//Shapefile of the roads
@@ -37,10 +36,11 @@ global {
 	geometry shape <- envelope(road_shapefile);
 	
 	float radius_siren_buffer <- 1.5#km;
-	float delay_get_info <- 3#mn;
+	float delay_get_info <- 4#mn;
 	
 	map<string, float> alert_chain_delay_member <- ["CENALT"::5#mn,"COGIC"::6#mn,/*"Préfecture"::10#mn,*/"Commune"::6#mn];
-	map<string,int> init_activity_distrib <- ["driving"::500,"doing thing"::500,"walking"::500,"sunbathing"::1500,"swimming"::250];
-	map<string,float> behaviour_distrib <- ["local"::0.4,"amused"::0.1, "tourist"::0.4, "altruist"::0.1];
+	map<string,float> behaviour_distrib <- ["local"::0.4,"amused"::0.1, "altruist"::0.1];
+	map<string,float> place_distrib <- ["beach"::0.4,"water"::0.1, "building"::0.3,"road"::0.2];
+	
 }
 

@@ -11,7 +11,7 @@ global {
 	//Shapefile of the buildings
 	file building_shapefile <- file("../includes/Batiments/Buildings_Cannes_GAMA.shp");
 	//Shapefile of the roads
-	file road_shapefile <- file("../includes/Roads/Road_Cannes_GAMA.shp");
+	file road_shapefile <- file("../includes/Roads/Roads_GAMA.shp");
 	//Shapefile of the population distribution and information
 	file pop_shapefile <- file("../includes/Carreau/carreau_pop_V2.shp");
 	//This map link a PopTile with all the Building present in this Tile

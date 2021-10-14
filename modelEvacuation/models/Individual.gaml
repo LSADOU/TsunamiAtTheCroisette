@@ -12,15 +12,17 @@ species Individual skills: [moving] {
 	int age;
 	bool is_evacuating;
 	bool is_alerted;
+	bool is_safe;
 	bool has_cellphone;
 	point dest;
 	point evacuation_point;
-	string behaviour <- "local" among: ["local","amused", "tourist", "altruist"];
+	string behaviour <- "local" among: ["local","amused", "altruist"];
 	date received_alert;
+	rgb color;
 
 	action getAlert {
 		if not is_alerted{
-			dest <- any_location_in(closest_to(Road,self));
+			dest <- closest_to(Road,self).shape.points closest_to self;
 		}
 		is_alerted <- true;
 		received_alert <- current_date;
@@ -47,7 +49,7 @@ species Individual skills: [moving] {
 		}
 	}
 	
-	reflex evacuate when: is_alerted and is_evacuating {
+	reflex evacuate when: is_alerted and is_evacuating and not is_safe{
 		if dest!=nil{
 			if distance_to(dest,self)<2{
 				dest <- nil;
@@ -56,9 +58,13 @@ species Individual skills: [moving] {
 				do goto target:dest speed:3#m/#s;
 			}
 		}else{
-			
+			if distance_to(evacuation_point,self)<2{
+				evacuation_point <- nil;
+				is_safe <- true;
+			}else{
+				do goto target: evacuation_point speed:3#m/#s on: road_network;
+			}
 		}
-		
 		if behaviour = "altruist"{
 			ask Individual where (distance_to(self.location, each.location) < 10 #m) {
 				do getInformation;	
@@ -70,10 +76,10 @@ species Individual skills: [moving] {
 	}
 	
 	aspect default {
-		rgb c;
-		c <- is_alerted ? #red : c;
-		c <- is_alerted and is_evacuating? #magenta : c;
-		draw circle(10) color: c;
+		color <- is_alerted ? #red : color;
+		color <- is_alerted and is_evacuating? #orange : color;
+		//color <- evacuation_point != nil ? #white : #black;
+		draw circle(10) color: color;
 	}
 
 }

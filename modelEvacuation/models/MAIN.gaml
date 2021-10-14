@@ -28,7 +28,7 @@ global {
 	init {
 		safe_people <- 0;
 		create Siren from: siren_shapefile;
-		create CellBroadcast;
+		//create CellBroadcast;
 		area_to_evacuate <- first(to_evacuate_shapefile);
 		safe_area <- first(safe_area_shapefile);
 		safe_spots <- safe_places_shapefile;
@@ -42,15 +42,40 @@ global {
 		write ""+length(beaches)+" beaches and "+ length(seas)+" swimming areas imported";
 		//Initialization of the road using the shapefile of roads
 		write "Creating roads...";
-		create Road from: road_shapefile {
-			if not ((shape overlaps area_to_evacuate) or (self overlaps safe_area)) {
-				do die;
-			}
-		}
+		create Road from: road_shapefile;
 		road_network <- as_edge_graph(Road);
 		
 		//Initialization of the individuals using initial activities distribution
 		write "Creating individuals...";
+		create Individual number: 5000{
+			is_safe <- false;
+			switch rnd_choice(place_distrib){
+				match "beach"{
+					self.color <- #yellow;
+					location <- any_location_in(one_of(beaches));
+					if flip(0.2){do getAlert;}
+					if flip(0.1){do getInformation;}
+					has_cellphone <- flip(0.4);
+				}
+				match "water"{
+					self.color <- #blue;
+					location <- any_location_in(one_of(seas));
+					if flip(0.3){do getAlert;}
+					if flip(0.1){do getInformation;}
+					has_cellphone <- false;
+				}
+				match "building"{
+					self.color <- #grey;
+					location <- any_location_in(one_of(Building-seas-beaches));
+					has_cellphone <- flip(0.9);
+				}
+				match "road"{
+					self.color <- #cyan;
+					location <- any_location_in(one_of(Road));
+					has_cellphone <- flip(0.8);
+				}
+			}
+		}
 		
 	}
 	
@@ -76,6 +101,9 @@ global {
 }
 
 experiment START_TSUNAMI type: gui {
+	
+	float minimum_cycle_duration <- 1.0;
+	
 	output {
 		layout #split toolbars: false consoles: true navigator: false parameters: false;
 		display map type: opengl draw_env: false {
