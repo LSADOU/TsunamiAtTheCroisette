@@ -19,6 +19,8 @@ global {
 
 	//Shapefile of the siren location
 	file siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
+	//Shapefile of the hypothetic new siren location
+	file new_siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
 	//Shapefile of the buildings
 	file building_shapefile <- file("../includes/BatimentsV4/BatimentsV4.shp");
 	//Shapefile of the roads
@@ -36,10 +38,13 @@ global {
 	geometry shape <- envelope(road_shapefile);
 	
 	float radius_siren_buffer <- 1.5#km;
-	float delay_get_info <- 4#mn;
+	float delay_get_info <- 3#mn;
+	int nb_siren_down <- 0;
+	int new_siren <- 1;
+	int nb_cellbroadcast <- 1;
 	
 	map<string, float> alert_chain_delay_member <- ["CENALT"::5#mn,"COGIC"::6#mn,/*"Préfecture"::10#mn,*/"Commune"::6#mn];
-	map<string,float> behaviour_distrib <- ["local"::0.4,"amused"::0.1, "altruist"::0.1];
+	map<string,float> behaviour_distrib <- ["local"::0.8,"amused"::0.1, "altruist"::0.1];
 	map<string,float> place_distrib <- ["beach"::0.4,"water"::0.1, "building"::0.3,"road"::0.2];
 	
 }

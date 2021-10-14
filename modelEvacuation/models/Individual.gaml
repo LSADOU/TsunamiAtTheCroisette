@@ -9,7 +9,7 @@ model TsunamiAtTheCroisette
 import "MAIN.gaml"
 
 species Individual skills: [moving] {
-	int age;
+	string activity;
 	bool is_evacuating;
 	bool is_alerted;
 	bool is_safe;
@@ -34,16 +34,29 @@ species Individual skills: [moving] {
 	}
 	
 	reflex panic when: is_alerted and not is_evacuating{
+		if activity = "water"{
+			if dest!=nil{
+				if distance_to(dest,self)<2{
+					dest <- nil;
+					activity <- "beach";
+					has_cellphone <- flip(0.6);
+				}else{
+					do goto target:dest speed:1#m/#s;
+				}
+			}else{
+				dest <- any_location_in(closest_to(beaches,self));
+			}
+		}
 		switch behaviour{
 			match "local"{
-				if current_date < received_alert + delay_get_info {
+				if current_date > received_alert + delay_get_info {
 					do getInformation;
 				}
 			}
 			match "amused"{
 				do wander amplitude:100#m speed:1#m/#s;
 			}
-			match "altuist"{
+			match "altruist"{
 				do getInformation;
 			}
 		}
@@ -64,15 +77,15 @@ species Individual skills: [moving] {
 			}else{
 				do goto target: evacuation_point speed:3#m/#s on: road_network;
 			}
-		}
-		if behaviour = "altruist"{
-			ask Individual where (distance_to(self.location, each.location) < 10 #m) {
-				do getInformation;	
-				if distance_to(self, myself) <5#m{
-					do getAlert;
-				}
-			}
 		}		
+	}
+	reflex transmit_alert when: behaviour="altruist" and every(10#s){
+		ask Individual where (distance_to(self.location, each.location) < 10 #m) {
+			do getInformation;	
+			if distance_to(self, myself) <5#m{
+				do getAlert;
+			}
+		}
 	}
 	
 	aspect default {
