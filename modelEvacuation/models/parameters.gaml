@@ -7,7 +7,7 @@
 model parameters
 
 global {
-	float step <- 1 #s;
+	float step <- 10 #s;
 	date starting_date <- date(2021, 10, 12, 12, 14, 50);
 	float alert_chain_delay <- 15#mn;
 	date alert_date <- date(2021, 10, 12, 12, 0, 0) + alert_chain_delay;
@@ -16,13 +16,14 @@ global {
 	font default <- font("Helvetica", 24, #bold);
 	rgb text_color <- #white;
 	rgb background <- world.color.darker.darker;
+	bool save_result_in_csv <- false;
 
 	//Shapefile of the siren location
 	file siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
 	//Shapefile of the hypothetic new siren location
-	file new_siren_shapefile <- file("../includes/Sirene/Sirene_Cannes_GAMA.shp");
+	file new_siren_shapefile <- file("../includes/Sirene_ideal/Sirene_ideal.shp");
 	//Shapefile of the buildings
-	file building_shapefile <- file("../includes/BatimentsV4/BatimentsV4.shp");
+	file building_shapefile <- file("../includes/Buildings_evacuation_area/Buildings_evacuation_area.shp");
 	//Shapefile of the roads
 	file road_shapefile <- file("../includes/new_road_locations.shp");
 	//Shapefile of the roads
@@ -44,7 +45,7 @@ global {
 	int nb_cellbroadcast <- 1;
 	
 	map<string, float> alert_chain_delay_member <- ["CENALT"::5#mn,"COGIC"::6#mn,/*"Préfecture"::10#mn,*/"Commune"::6#mn];
-	map<string,float> behaviour_distrib <- ["local"::0.8,"amused"::0.1, "altruist"::0.1];
+	map<string,float> behaviour_distrib <- ["local"::0.8,"amused"::0.01, "altruist"::0.19];
 	map<string,float> place_distrib <- ["beach"::0.4,"water"::0.1, "building"::0.3,"road"::0.2];
 	
 }
